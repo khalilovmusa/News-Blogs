@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Weather from './Weather'
 import Calendar from './Calendar'
 import "./News.css"
@@ -9,8 +9,26 @@ import scienceImg from '../assets/images/science.jpg'
 import worldImg from '../assets/images/world.jpg'
 import healthImg from '../assets/images/health.jpg'
 import nationImg from '../assets/images/nation.jpg'
+import axios from 'axios'
 
 const News = () => {
+    const [ headline, setHeadline ] = useState(null);
+    const [ news, setNews ] = useState([]);
+
+
+    useEffect(() => {
+        const fetchNews = async () => {
+            const URL = `https://gnews.io/api/v4/search?q=example&apikey=dae24d834d1eabc2c9f7ea8414a1bfc4`;
+
+            const response = await axios.get(URL);
+            const fetchedNews = response.data.articles;
+
+            setHeadline(fetchedNews[0]);
+        }
+
+        fetchNews()
+    },[]);
+
     return (
         <div className='news'>
             <header className='news-header'>
@@ -50,7 +68,7 @@ const News = () => {
                 </div>
                 <div className="news-section">
                     <div className="headline">
-                        <img src={techImg} alt="headline-img" />
+                        <img src={headline.image} alt={headline.title} />
                         <h2 className="headline-title">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, tempore.
                             <i className="fa-regular fa-bookmark bookmark"></i>
